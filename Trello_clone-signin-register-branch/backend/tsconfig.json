@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "CommonJS",
+      "moduleResolution": "Node",
+      "outDir": "dist",
+      "rootDir": "Trello_clone/backend/src",
+      "strict": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "skipLibCheck": true
+    },
+    "include": ["Trello_clone/backend/src"]
+  }
+  
