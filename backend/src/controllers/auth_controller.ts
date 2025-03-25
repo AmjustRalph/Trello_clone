@@ -1,6 +1,4 @@
 
-import dotenv from "dotenv"
-dotenv.config()
 import {Response, Request, NextFunction} from 'express';
 import { registerUserService, loginUserService} from "../services/userServices";
 import handleResponse from "../utils/ResponseHandler"
