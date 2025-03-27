@@ -10,6 +10,8 @@ import notfoundHandler from "./middleware/notfoundHandler";
 
 
 import boardRoutes from "./Routes/boardRoutes";
+import listRoute from "./Routes/ListRoutes"
+import cardRoute from "./Routes/cardRoute"
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,9 +31,9 @@ app.get("/", (req, res) => {
 //Routes
 //Authentication Routes
 app.use("/api/v1/auth", authRoutes)
-
-
 app.use("/boards", boardRoutes);
+app.use("/lists", listRoute)
+app.use("/cards", cardRoute)
 
 // Handle unmatched routes (404)
 app.all("*", notfoundHandler);

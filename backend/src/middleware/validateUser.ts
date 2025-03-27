@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import validateEmail from "../utils/validEmail";
-import validUserName from "../utils/validUserInput";
 import { validPassword } from "../utils/validPassword";
 import { throwError } from "../utils/throwError";
+import { validateUserInput } from "../utils/validUserInput";
 
 const validateRegisterUser = (req: Request, res: Response, next: NextFunction) => {
 
@@ -12,7 +12,7 @@ const validateRegisterUser = (req: Request, res: Response, next: NextFunction) =
     const { username, password, email } = req.body;
 
     try {
-        validUserName(username)
+        validateUserInput(username)
         validPassword(password)
         validateEmail(email)
          next()
