@@ -13,6 +13,7 @@ import boardRoutes from "./Routes/boardRoutes";
 import listRoute from "./Routes/ListRoutes"
 import cardRoute from "./Routes/cardRoute"
 
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -23,17 +24,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
 
-app.get("/", (req, res) => {
-    res.status(200).json("Homepage")
-})
+
 
 
 //Routes
 //Authentication Routes
 app.use("/api/v1/auth", authRoutes)
-app.use("/boards", boardRoutes);
-app.use("/lists", listRoute)
-app.use("/cards", cardRoute)
+app.use("/api/v1/boards", boardRoutes);
+app.use("/api/v1/lists", listRoute)
+app.use("/api/v1/cards", cardRoute)
 
 // Handle unmatched routes (404)
 app.all("*", notfoundHandler);

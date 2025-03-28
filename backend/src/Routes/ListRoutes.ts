@@ -1,17 +1,17 @@
 
 import express from "express";
-import { createListController, deleteListController, reorderListsController, updateListController } from "../controllers/list_controller";
+import { createListController, deleteListController, reorderListsController, updateListController } from "../controllers/List_controller";
 
 
 const router = express.Router();
 
-router.put("/reorder", reorderListsController);
+router.post("/", createListController);
 
-router.post("/createlist", createListController);
+router.patch("/", reorderListsController);
 
-router.delete("/delete/:id", deleteListController);
+router.delete("/:id", deleteListController);
 
-router.put("/update/:id", updateListController);
+router.put("/:id", updateListController);
 
 
 

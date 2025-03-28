@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import validateEmail from "../utils/validEmail";
-import { validPassword } from "../utils/validPassword";
+import {validateEmail} from "../utils/validations";
+import { validPassword } from "../utils/validations";
 import { throwError } from "../utils/throwError";
-import { validateUserInput } from "../utils/validUserInput";
+import { validateUserInput } from "../utils/validations";
 
 const validateRegisterUser = (req: Request, res: Response, next: NextFunction) => {
 

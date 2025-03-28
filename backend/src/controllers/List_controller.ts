@@ -1,31 +1,59 @@
 import { Response, Request, NextFunction } from "express";
-import { createListService, deleteListService, reorderListsService, updateListService } from "../services/list_Services";
-//import { createListService, deleteListService, reorderListsService, updateListService } from "../services/listServices";
+import { throwError } from "../utils/throwError";
+import { pool } from "../config/db_connect";
+import handleResponse from "../utils/ResponseHandler";
+import { deleteEntity } from "../utils/deleteEntity";
+
 
 
 export const createListController = async (req: Request, res: Response, next: NextFunction) => {
-  const { board_id, name, position } = req.body;
+    try {
+        const { board_id, name, position } = req.body;
+        if (!board_id || typeof board_id !== "number") throwError("Invalid board_id.", 400);
+        if (!name || typeof name !== "string" || !name.trim()) throwError("Invalid name.", 400);
 
-  if (!board_id || !name) {
-      res.status(400).json({ error: "Board ID and name are required" });
-      return
-  }
+        const { rows } = await pool.query(
+            `INSERT INTO lists (board_id, name, position) 
+             VALUES ($1, $2, COALESCE($3, (SELECT COALESCE(MAX(position), 0) + 1 FROM lists WHERE board_id = $1))) 
+             RETURNING *`,
+            [board_id, name, position]
+        );
 
-  try {
-    const newList = await createListService( board_id, name, position );
-    res.json(newList);
-  } catch (error) {
-   next(error)
-  }
+        res.status(201).json(rows[0]);
+    } catch (error) {
+        next(error);
+    }
 };
+
+
+
+
+export const reorderListsController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const lists: { id: number; position: number }[] = req.body?.lists;
+
+        if (!Array.isArray(lists) || lists.some(({ id, position }) => isNaN(id) || isNaN(position))) {
+            throwError("Invalid request. Each list must have a numeric 'id' and 'position'.", 400);
+        }
+
+        await Promise.all(
+            lists.map(({ id, position }) => pool.query("UPDATE lists SET position = $1 WHERE id = $2", [position, id]))
+        );
+
+        handleResponse(res, 200, "Lists reordered successfully")
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 
 
 export const deleteListController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = Number(req.params.id); 
-        const response = await deleteListService(id);
-        res.status(200).json(response);
+        const response = await deleteEntity("lists", id, "List");
+        handleResponse(res, 200, "List deleted successfully", response)
     } catch(err) {
         next(err)
     }
@@ -33,37 +61,24 @@ export const deleteListController = async (req: Request, res: Response, next: Ne
     }
 
 
-export const updateListController = async (req: Request, res: Response, next: NextFunction) => {
+    export const updateListController = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = Number(req.params.id);
             const { name } = req.body;
     
-            if (isNaN(id)) {
-                res.status(400).json({ error: "Invalid list ID. It must be a number." });
-                return
-            }
+            if (!id || isNaN(id) || !name?.trim()) throwError("Invalid input. ID must be a number, and name cannot be empty.", 400);
     
-            const updatedList = await updateListService(id, name);
-            res.status(200).json(updatedList);
+            const { rowCount, rows } = await pool.query(
+                "UPDATE lists SET name = $1 WHERE id = $2 RETURNING *", [name.trim(), id]
+            );
+    
+            if (!rowCount) throwError("List not found.", 404);
+    
+            handleResponse(res, 200, "List updated successfully", rows[0])
+
         } catch (error) {
-          next(error)
+            next(error);
         }
-};
+    };
     
-
-export const reorderListsController = async (req: Request, res: Response, next: NextFunction) => {
-
-    try {
-        const { lists } = req.body;
-
-        if (!Array.isArray(lists)) {
-            res.status(400).json({ error: "Invalid request format. Expecting an array of lists." });
-            return
-        }
-        const response = await reorderListsService(lists);
-        res.status(200).json(response);
-
-    } catch (error) {
-      next(error);
-    }
-};
+    

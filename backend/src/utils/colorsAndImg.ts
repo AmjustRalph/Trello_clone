@@ -22,6 +22,11 @@ export const colors = [
 
 export const images = [
     "https://cdn.pixabay.com/photo/2024/06/20/11/45/cafe-8841955_1280.jpg",
-    "https://cdn.pixabay.com/photo/2019/03/24/14/23/bakery-4077811_960_720.jpg"
+    "https://cdn.pixabay.com/photo/2019/03/24/14/23/bakery-4077811_960_720.jpg",
+    "https://i.pinimg.com/736x/75/d2/6a/75d26a51b4e0fb6477b0593790e22294.jpg",
+    "https://i.pinimg.com/474x/85/3a/b5/853ab55806ba74cbb7338246635f199e.jpg",
+    "https://i.pinimg.com/750x/9f/fb/84/9ffb843a57105ccd1a8557523bc9f9b5.jpg",
+    "https://i.pinimg.com/474x/74/30/f1/7430f1eeb5a6fad2f309bddc772b8253.jpg",
+    "https://i.pinimg.com/474x/15/82/4e/15824e846488f80557d1d6c31edb5865.jpg"
 ]
       

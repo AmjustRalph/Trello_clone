@@ -1,109 +1,80 @@
 
 import {Request, Response, NextFunction } from "express";
-import { createCard, deleteCardById, reorderCards, updateCardById } from "../services/cardServices";
+import { throwError } from "../utils/throwError";
 import { pool } from "../config/db_connect";
+import handleResponse from "../utils/ResponseHandler";
+import { deleteEntity } from "../utils/deleteEntity";
 
-
-export const createCardController = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { list_id, description, position } = req.body;
-  
-      if (!list_id || !description) {
-          res.status(400).json({ error: "List ID and description are required" });
-          return
-      }
-  
-      const newCard = await createCard(list_id, description, position);
-       res.status(201).json(newCard);
-    } catch (error) {
-      next(error)
-    }
-};
-  
-
-
-export const deleteCardController = async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-  
-    // Validate ID
-    if (!id || isNaN(Number(id))) {
-        res.status(400).json({ error: "Invalid card ID" });
-        return
-    }
-  
-    try {
-      const result = await deleteCardById(Number(id));
-  
-      if (result.rowCount === 0) {
-          res.status(404).json({ error: "Card not found" });
-          return
-      }
-  
-      res.json({ message: "Card deleted successfully" });
-    } catch (error) {
-     next(error)
-    }
-};
-  
-
-export const updateCard = async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
-  const {description } = req.body;
-
-  // Validate input
-  if (!id || isNaN(Number(id))) {
-      res.status(400).json({ error: "Invalid card ID" });
-      return
-  }
-    
-  if (!description || typeof description !== "string") {
-      res.status(400).json({ error: "Description is required and must be a string" });
-      return
-  }
-
-  try {
-    const result = await updateCardById(Number(id), description);
-
-    if (result.rowCount === 0) {
-        res.status(404).json({ error: "Card not found" });
-        return
-    }
-
-    res.json(result.rows[0]);
-  } catch (error) {
-   next(error)
-  }
-};
 
 
 export const reorderCardsController = async (req: Request, res: Response, next: NextFunction) => {
-    const { cards } = req.body;
-  
-    // Validate input
-    if (!Array.isArray(cards) || cards.length === 0) {
-        res.status(400).json({ error: "Invalid input: Must provide an array of cards" });
-        return
-    }
-  
-    for (const card of cards) {
-      if (!card.id || typeof card.id !== "number") {
-          res.status(400).json({ error: `Invalid card ID: ${card.id}` });
-          return
+  try {
+      const { cards } = req.body;
+
+      if (!Array.isArray(cards) || cards.some(({ id, position, list_id }) => [id, position, list_id].some(n => isNaN(n)))) {
+          throwError("Invalid input: Each card must have a valid numeric id, position, and list_id.", 400);
       }
-      if (typeof card.position !== "number") {
-          res.status(400).json({ error: `Invalid position for card ${card.id}` });
-          return
-      }
-      if (!card.list_id || typeof card.list_id !== "number") {
-          res.status(400).json({ error: `Invalid list_id for card ${card.id}` });
-          return
-      }
-    }
-  
+
+      await Promise.all(cards.map(({ id, position, list_id }: { id: number; position: number; list_id: number }) => 
+          pool.query("UPDATE cards SET position = $1, list_id = $2 WHERE id = $3", [position, list_id, id])
+      ));
+
+    handleResponse(res, 200, "Cards reorderd successfully")
+  } catch (error) {
+      next(error);
+  }
+};
+
+
+
+export const createCardController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+      const { list_id, description, position } = req.body;
+      if (!list_id || !description) throwError("List ID and description are required", 400);
+
+      const { rows } = await pool.query(
+          "INSERT INTO cards (list_id, description, position) VALUES ($1, $2, $3) RETURNING *",
+          [list_id, description, position]
+      );
+
+    handleResponse(res, 201, "Card created successfully", rows[0])
+  } catch (error) {
+      next(error);
+  }
+};
+
+
+export const deleteCardController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = Number(req.params.id); 
+    console.log(id)
+      const response = await deleteEntity("cards", id, "Card");
+      handleResponse(res, 200, "Card deleted successfully", response)
+  } catch(err) {
+      next(err)
+  }
+
+  }
+
+
+  export const updateCard = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await reorderCards(cards);
-      res.json({ message: "Cards reordered successfully" });
+        const id = Number(req.params.id);
+        const { description } = req.body;
+
+        if (!id || isNaN(id)) throwError("Invalid card ID", 400);
+        if (!description || typeof description !== "string") throwError("Description is required and must be a string", 400);
+
+        const { rowCount, rows } = await pool.query(
+            "UPDATE cards SET description = $1 WHERE id = $2 RETURNING *",
+            [description, id]
+        );
+
+        if (!rowCount) throwError("Card not found", 404);
+        res.json(rows[0]);
     } catch (error) {
-    next(error)
+        next(error);
     }
-  };
+};
+
+

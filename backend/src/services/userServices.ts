@@ -9,41 +9,39 @@ import { NextFunction } from "express";
 
 
 export const registerUserService = async (username: string, password: string, email: string) => {
+const emailCheck = await pool.query(
+"SELECT 1 FROM users WHERE email = $1",
+[email]
+);
+if (emailCheck?.rowCount && emailCheck.rowCount > 0) {
 
-          const emailCheck = await pool.query(
-            "SELECT 1 FROM users WHERE email = $1",
-            [email]
-          );
- 
-          if (emailCheck?.rowCount && emailCheck.rowCount > 0) {
-        
-            throwError("Email already exist", 500);
-          }
-          
-          const hashedPassword = await bcrypt.hash(password, 10);
+throwError("Email already exist", 500);
+}
 
-          
-          const result = await pool.query(
-            "INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING username, email",
-            [username, hashedPassword, email]
-  );
-  
-        const user = result.rows[0];
+const hashedPassword = await bcrypt.hash(password, 10);
 
-        const token = jwt.sign(
-          { id: user.userId, email: user.email },
-          process.env.JWT_SECRET as string,
-          { expiresIn: "15min" }
-        );
 
-  return {
-    username: user.username,
-    email: user.email,
-    token: token
-  };
-  
-        }
-      
+const result = await pool.query(
+"INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING username, email",
+[username, hashedPassword, email]
+);
+
+const user = result.rows[0];
+
+const token = jwt.sign(
+{ id: user.userId, email: user.email },
+process.env.JWT_SECRET as string,
+{ expiresIn: "15min" }
+);
+
+return {
+username: user.username,
+email: user.email,
+token: token
+};
+
+}
+
     
    
     

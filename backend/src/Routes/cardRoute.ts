@@ -4,13 +4,15 @@ import { deleteCardController } from "../controllers/cardController";
 
 const router = express.Router();
 
-router.put("/reorder", reorderCardsController);
+router.patch("/", reorderCardsController);
 
-router.post("/createCard", createCardController)
+router.post("/", createCardController)
 
-router.put("/update/:id", updateCard)
+router.delete("/:id", deleteCardController);
 
-router.delete("/delete/:id", deleteCardController);
+router.put("/:id", updateCard);
+
+
 
 
 
