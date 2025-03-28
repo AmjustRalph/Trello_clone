@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 //importing motion from framer-motion 
 const Hero = () => {
   return (
-    <section className="flex flex-col md:flex-row items-center justify-between md:px-12 py-12 bg-gray-100">
+    <div className="bg-gray-100 min-h-screen">
+  <section className="flex flex-col md:flex-row items-center justify-between md:px-12 py-12 w-full">
       {/* Left Side Content */}
       <motion.div
         className="text-center md:text-left md:w-1/2 space-y-6"
@@ -15,7 +16,7 @@ const Hero = () => {
         <h1 className="text-5xl md:text-6xl font-bold text-blue-700 leading-tight font-['Barlow_Condensed']"></h1>
 
         <motion.p
-          className="bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text md:text-5xl text-transparent leading-snug justify-around"
+          className="bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text md:text-7xl text-transparent leading-snug justify-around"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
@@ -24,7 +25,7 @@ const Hero = () => {
         </motion.p>
 
         <motion.p
-          className="text-lg md:text-3xl text-gray-600"
+          className="text-lg md:text-3xl text-gray-800"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4 }}
@@ -79,6 +80,7 @@ const Hero = () => {
         />
       </motion.div>
     </section>
+    </div>
   );
 };
 

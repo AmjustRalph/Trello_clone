@@ -10,6 +10,7 @@ const validateRegisterUser = (req: Request, res: Response, next: NextFunction) =
         throwError("Request body is missing",400);
     }
     const { username, password, email } = req.body;
+    console.log( typeof password)
 
     try {
         validUserName(username)

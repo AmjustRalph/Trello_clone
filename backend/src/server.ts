@@ -3,9 +3,10 @@ import cors from "cors";
 import dotenv from "dotenv"
 dotenv.config()
 
+
 //file imports
-import authRoutes from "./Routes/authRoutes"
-import globalErrHandler from "./middleware/globalErrHandler"
+import authRoutes from "./Routes/authRoutes";
+import globalErrHandler from "./middleware/globalErrHandler";
 import notfoundHandler from "./middleware/notfoundHandler";
 
 
@@ -13,7 +14,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 //Middlewares
-app.use(cors());
+// app.use(cors());
+app.use(cors({ origin: "*" })); 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 

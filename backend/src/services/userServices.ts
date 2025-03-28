@@ -9,20 +9,22 @@ import { NextFunction } from "express";
 
 
 export const registerUserService = async (username: string, password: string, email: string) => {
+        console.log("Register User Service 1")
 
           const emailCheck = await pool.query(
             "SELECT 1 FROM users WHERE email = $1",
             [email]
           );
- 
+           console.log("Register User Service 2")
           if (emailCheck?.rowCount && emailCheck.rowCount > 0) {
-        
             throwError("Email already exist", 500);
           }
-          
+          console.log("Register User Service 3")  
           const hashedPassword = await bcrypt.hash(password, 10);
+          console.log("Register User Service 4")
 
-          
+          console.log("Service:", typeof hashedPassword)
+
           const result = await pool.query(
             "INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING username, email",
             [username, hashedPassword, email]

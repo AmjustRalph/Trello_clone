@@ -1,7 +1,7 @@
-//routes for sign-up button on hopepage and navagation bar
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import SignUp from "./components/sign-up";
+import Dashboard from "./components/Dashboard"; // ✅ Import Dashboard
 
 const App = () => {
   return (
@@ -20,6 +20,7 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/dashboard" element={<Dashboard />} /> {/* ✅ Fixed */}
         </Routes>
       </div>
     </Router>
@@ -27,3 +28,4 @@ const App = () => {
 };
 
 export default App;
+

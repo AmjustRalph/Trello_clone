@@ -3,7 +3,7 @@ import { throwError } from "./throwError";
 
 
 const validPassword = (password: string) => {
-
+    console.log(typeof password)
 if (typeof password !== "string" || password.trim() === "") {
     throwError("Invalid Password: Must be a non-empty string", 400);
 }
