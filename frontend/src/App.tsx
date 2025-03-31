@@ -5,6 +5,7 @@ import SignUp from "./components/sign-up";
 import Dashboard from "./components/dashboard";
 import Navbar from "./components/Navbar";
 import Board from "./components/Board";
+import NotFound from "./components/Notfound";
 
 const App: React.FC = () => {
   return (
@@ -16,10 +17,10 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/board/:id" element={<Board />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
 };
 
 export default App;
-
