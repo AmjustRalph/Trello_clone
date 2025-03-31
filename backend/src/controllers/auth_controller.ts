@@ -1,13 +1,11 @@
 
-import dotenv from "dotenv"
-dotenv.config()
 import {Response, Request, NextFunction} from 'express';
 import { registerUserService, loginUserService} from "../services/userServices";
 import handleResponse from "../utils/ResponseHandler"
 
   
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
+export const registerController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { username, password, email } = req.body;
     const user = await registerUserService(username, password, email)
@@ -21,7 +19,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
 
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+export const loginController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
     const token = await loginUserService(email, password, next)

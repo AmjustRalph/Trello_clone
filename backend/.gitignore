@@ -37,3 +37,6 @@ coverage/
 *.bak
 *.swp
 Thumbs.db
+
+
+.gitkeep

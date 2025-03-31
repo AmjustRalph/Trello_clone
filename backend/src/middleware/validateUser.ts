@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import validateEmail from "../utils/validEmail";
-import validUserName from "../utils/validUserInput";
-import { validPassword } from "../utils/validPassword";
+import {validateEmail} from "../utils/validations";
+import { validPassword } from "../utils/validations";
 import { throwError } from "../utils/throwError";
+import { validateUserInput } from "../utils/validations";
 
 const validateRegisterUser = (req: Request, res: Response, next: NextFunction) => {
 
@@ -10,10 +10,9 @@ const validateRegisterUser = (req: Request, res: Response, next: NextFunction) =
         throwError("Request body is missing",400);
     }
     const { username, password, email } = req.body;
-    console.log( typeof password)
 
     try {
-        validUserName(username)
+        validateUserInput(username)
         validPassword(password)
         validateEmail(email)
          next()
