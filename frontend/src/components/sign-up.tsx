@@ -28,7 +28,7 @@ const SignUp = () => {
     setLoading(true);
     console.log("Reached Here")
     try {
-      const response = await fetch("http://localhost:5350/api/v1/auth/register", {
+      const response = await fetch("http://localhost:5950/api/v1/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,16 +38,16 @@ const SignUp = () => {
 
       const data = await response.json();
       console.log("This is the results from our fetch register:", data)
-      setLoading(false);
 
-      if (response.ok) {
+      if (!response.ok) {
+        throw new Error(data.message || "Signup failed"); 
+      } 
         localStorage.setItem("token", data.token); // Save token
         window.location.href = "/dashboard"; // Redirect
-      } else {
-        setError(data.message || "Registration failed");
-      }
+    
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
     }
   };

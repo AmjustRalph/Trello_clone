@@ -31,8 +31,11 @@
     "@dnd-kit/accessibility": "^3.1.1",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
+    "axios": "^1.8.4",
+    "framer-motion": "^12.6.3",
     "lucide-react": "^0.484.0",
     "react-icons": "^5.5.0",
-    "react-ionicons": "^4.2.1"
+    "react-ionicons": "^1.5.7",
+    "react-router-dom": "^7.4.1"
   }
 }

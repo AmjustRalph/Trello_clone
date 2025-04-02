@@ -2,11 +2,22 @@
 import axios from "axios";
 import { BASE_URL } from "./apiconfig";
 
-export const registerUser = async (userData: any) => {
+interface UserData {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export const registerUser = async (userData: UserData) => {
   return axios.post(`${BASE_URL}/auth/register`, userData);
 };
 
-export const loginUser = async (credentials: any) => {
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export const loginUser = async (credentials: LoginCredentials) => {
   return axios.post(`${BASE_URL}/auth/login`, credentials);
 };
 

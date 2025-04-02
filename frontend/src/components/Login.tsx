@@ -15,7 +15,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5350/api/v1/auth/login", {
+      const response = await fetch("http://localhost:5950/api/v1/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,18 +24,18 @@ const Login = () => {
       });
 
       const data = await response.json();
-      console.log(data)
+
+  if (!response.ok) {
+    throw new Error(data.message || "Login failed"); 
+  }
+        console.log(data);
+        localStorage.setItem("token", data.token); // Save token
+        window.location.href = "/dashboard"; // Redirect
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
 
-      if (response.ok) {
-        localStorage.setItem("token", data.token); // Save token
-        window.location.href = "/Dashboard"; // Redirect
-      } else {
-        setError(data.message || "Login failed");
-      }
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
-      setLoading(false);
     }
   };
 
