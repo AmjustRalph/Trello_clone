@@ -34,3 +34,8 @@ Thumbs.db
 # npm or yarn lock (optional: keep or ignore based on workflow)
  package-lock.json
 # yarn.lock
+
+node_modules/
+prisma/generated/
+dist/
+build/
