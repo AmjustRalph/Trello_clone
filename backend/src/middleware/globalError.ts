@@ -7,7 +7,7 @@ interface CustomError extends Error {
 }
 
 
-const globalErrorHandler = (error: CustomError, req: Request, res: Response, next: NextFunction) => {
+const globalErrorHandler = (error: CustomError, _req: Request, res: Response, _next: NextFunction) => {
   error.statusCode = error.statusCode || 500;
 
   // Detect database-related errors and customize response
