@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "echo 'Running dev script' && nodemon --ext ts --exec ts-node src/server.ts",
-    "build": "cd backend && tsc",
-    "start": "node  backend/dist/server.js"
+    "build": "tsc",
+    "start": "node  dist/server.js"
   },
   "keywords": [],
   "author": "",
